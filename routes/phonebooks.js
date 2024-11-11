@@ -45,7 +45,6 @@ router.get('/:id', async (req, res, next) => {
 });
 
 router.post('/', addPhonebookValidation, async (req, res, next) => {
-  // - middleware validation
   try {
     const { name, phone } = req.body;
     const data = await Phonebook.create({ name, phone });
