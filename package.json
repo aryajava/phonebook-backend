@@ -29,8 +29,11 @@
   "scripts": {
     "migration": "npx sequelize-cli db:migrate",
     "migration:undo": "npx sequelize-cli db:migrate:undo",
+    "generate:seed": "npx sequelize-cli seed:generate --name",
+    "seed": "npx sequelize-cli db:seed:all",
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "test": "mocha --exit"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -46,6 +49,9 @@
     "sharp": "^0.33.5"
   },
   "devDependencies": {
+    "chai": "^4.5.0",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.8.2",
     "nodemon": "^3.1.7",
     "sequelize-cli": "^6.6.2"
   }

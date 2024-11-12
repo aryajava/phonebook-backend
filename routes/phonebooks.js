@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { Phonebook } = require('../models');
 const { Op } = require('sequelize');
-const { addPhonebookValidation } = require('../middlewares/formValidation');
+const { addPhonebookValidation, updatePhonebookValidation, updatePhonebookAvatarValidation } = require('../middlewares/formValidation');
 const moment = require('moment');
 const sharp = require("sharp");
 var router = express.Router();
@@ -58,13 +58,14 @@ router.post('/', addPhonebookValidation, async (req, res, next) => {
   }
 });
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', updatePhonebookValidation, async (req, res, next) => {
   try {
     const { id } = req.params;
     const data = await Phonebook.update(req.body, { where: { id }, returning: true, plain: true });
     if (data[0] === 0) {
       res.status(400).json({ error: 'Bad request' });
-    } else {
+    }
+    else {
       res.status(201).json(data[1]);
     }
   } catch (error) {
@@ -72,16 +73,14 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
-router.put('/:id/avatar', async (req, res, next) => {
+router.put('/:id/avatar', updatePhonebookAvatarValidation, async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!req.files || !req.files.avatar) return res.status(400).json({ error: 'No files were uploaded.' });
     const avatarFile = req.files.avatar;
     const filename = `${id}${moment().format('YYYYMMDDHHmmss')}_avatar.jpg`;
     const uploadDir = path.join(__dirname, '../public/images', id.toString());
     const uploadPath = path.join(uploadDir, `${filename}`);
     const oldAvatar = await Phonebook.findByPk(id);
-    if (!oldAvatar) return res.status(404).json({ error: 'Not found' });
     if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
     if (oldAvatar.avatar) {
       const oldAvatarPath = path.join(uploadDir, oldAvatar.avatar);
@@ -106,7 +105,7 @@ router.delete('/:id', async (req, res, next) => {
     const avatarPath = path.join(__dirname, '../public/images', id.toString());
     const result = await Phonebook.destroy({ where: { id } });
     if (result === 0) {
-      res.status(400).json({ error: 'Bad request' });
+      res.status(404).json({ error: 'Not found' });
     } else {
       if (fs.existsSync(avatarPath)) fs.rmSync(avatarPath, { recursive: true });
       res.status(200).json(data);
