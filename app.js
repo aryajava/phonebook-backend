@@ -3,6 +3,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fileupload = require("express-fileupload");
+const cors = require('cors');
 
 var phonebooksRouter = require('./routes/phonebooks');
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileupload({ createParentPath: true, safeFileNames: true, preserveExtension: true }));
+app.use(cors());
 
 app.use('/api/phonebooks', phonebooksRouter);
 
