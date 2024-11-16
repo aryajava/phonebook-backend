@@ -51,7 +51,13 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', addPhonebookValidation, async (req, res, next) => {
   try {
     const { name, phone } = req.body;
-    const data = await Phonebook.create({ name, phone });
+    const defaultAvatarFilename = 'defaultAvatar.png';
+    const defaultAvatarPath = path.join(__dirname, '../public/images/', defaultAvatarFilename);
+    const data = await Phonebook.create({ name, phone, avatar: defaultAvatarFilename });
+    const uploadDir = path.join(__dirname, '../public/images', data.id.toString());
+    const uploadPath = path.join(uploadDir, `${defaultAvatarFilename}`);
+    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+    await sharp(defaultAvatarPath).resize(256, 256).toFormat('png').toFile(uploadPath);
     res.status(201).json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
