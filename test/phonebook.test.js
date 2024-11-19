@@ -434,7 +434,7 @@ describe('Phonebook API Test', () => {
 
     // Error case put existing phonebook avatar with worng file type
     it('It should not PUT an existing phonebook avatar with worng file type', (done) => {
-      chai.request(app).put('/api/phonebooks/1/avatar').attach('avatar', 'test/avatar.pdf').end((err, response) => {
+      chai.request(app).put('/api/phonebooks/1/avatar').attach('avatar', 'test/data/avatar.pdf').end((err, response) => {
         response.should.have.status(400);
         response.should.be.json;
         response.body.should.be.a('object');
@@ -446,7 +446,7 @@ describe('Phonebook API Test', () => {
     // Error case put existing phonebook avatar with invalid id
     it('It should not PUT an existing phonebook avatar with invalid id', (done) => {
       const id = 9999;
-      chai.request(app).put(`/api/phonebooks/${id}/avatar`).attach('avatar', 'test/avatar.png').end((err, response) => {
+      chai.request(app).put(`/api/phonebooks/${id}/avatar`).attach('avatar', 'test/data/avatar.png').end((err, response) => {
         response.should.have.status(404);
         response.should.be.json;
         response.body.should.be.a('object');
@@ -462,7 +462,7 @@ describe('Phonebook API Test', () => {
         phone: '081234567890',
       };
       Phonebook.create(phonebook).then((data) => {
-        chai.request(app).put(`/api/phonebooks/${data.id}/avatar`).attach('avatar', 'test/avatar.png').end((err, response) => {
+        chai.request(app).put(`/api/phonebooks/${data.id}/avatar`).attach('avatar', 'test/data/avatar.png').end((err, response) => {
           response.should.have.status(201);
           response.should.be.json;
           response.body.should.be.a('object');
