@@ -92,7 +92,8 @@ router.put('/:id/avatar', updatePhonebookAvatarValidation, async (req, res, next
       const oldAvatarPath = path.join(uploadDir, oldAvatar.avatar);
       if (fs.existsSync(oldAvatarPath)) fs.unlinkSync(oldAvatarPath);
     }
-    await sharp(avatarFile.data).resize(256, 256).toFormat('jpg').toFile(uploadPath);
+    avatarFile.mv(uploadPath);
+    // await sharp(avatarFile.data).resize(256, 256).toFormat('jpg').toFile(uploadPath);
     const data = await Phonebook.update({ avatar: filename }, { where: { id }, returning: true, plain: true });
     if (data[0] === 0) {
       res.status(400).json({ error: 'Bad request' });
