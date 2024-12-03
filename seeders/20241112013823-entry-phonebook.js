@@ -4,7 +4,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     const generateRandomName = () => {
-      const length = Math.floor(Math.random() * 4) + 1; // Panjang nama acak antara 1-4
+      const length = 4 // Panjang nama acak harus 4
       let name = '';
       for (let i = 0; i < length; i++) {
         const randomChar = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // Karakter a-z
@@ -22,7 +22,7 @@ module.exports = {
 
     alphabet.split('').forEach((letter) => {
       let count = 0;
-      while (count < 50) {
+      while (count < 10) {
         const name = generateRandomName();
         if (name.toLowerCase().startsWith(letter)) {
           seedData.push({
